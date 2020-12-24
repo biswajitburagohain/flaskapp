@@ -4,7 +4,7 @@ from passlib.hash import sha256_crypt
 #import psycopg2
 from pymongo import MongoClient
 from psycopg2 import Error
-from register import RegisterForm
+from register import RegisterForm, Login
 
 app = Flask(__name__)
 Articles = Articles()
@@ -40,6 +40,15 @@ def register():
         
     return render_template('register.html', form = form)
 
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+    login = Login(request.form)
+    if request.method =='POST':
+        username = request.form['username']
+        msg = username + ' already exists '
+        flash(message=msg, category='success')
+        
+    return render_template('login.html', login = login)
 
 if __name__ == "__main__":
     app.secret_key = 'secret_key'
