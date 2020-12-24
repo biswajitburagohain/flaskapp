@@ -1,0 +1,20 @@
+try:
+            conn = psycopg2.connect(user= 'postgres',
+                                    password= 'Biswajit',
+                                    host= '127.0.0.1',
+                                    port= '5000',
+                                    database= 'postgres'
+                                    )
+            cursor = conn.cursor()
+            cusor.execute('insert into myflaskblog (name, username, password, email) values (%s, %s, %s, %s)', 
+                            ('biswajit', 'biswajit', 'test', 'test@test.com'))
+            conn.commit()
+
+        except(Exception, Error) as e:
+            flash(message='Error encountered')
+
+        finally:
+            if (conn):
+                cursor.close()
+                conn.close()
+        
