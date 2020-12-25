@@ -4,7 +4,7 @@ from passlib.hash import sha256_crypt
 #import psycopg2
 from pymongo import MongoClient
 from psycopg2 import Error
-from register import RegisterForm, Login
+from register import RegisterForm
 
 app = Flask(__name__)
 Articles = Articles()
@@ -42,13 +42,24 @@ def register():
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-    login = Login(request.form)
     if request.method =='POST':
         username = request.form['username']
-        msg = username + ' already exists '
-        flash(message=msg, category='success')
-        
-    return render_template('login.html', login = login)
+        pass_w   = request.form['password']
+        client = MongoClient('localhost', 27017)
+        collection = client['flaskblogdb']['flaskblog']
+        user = collection.find_one({'username':{'$ne': 'NoData'}})
+        if user['username'] == username:
+            if (sha256_crypt.verify(pass_w, user['password'])):
+                msg= 'login successfull!'
+                return render_template('login.html', msg = msg)
+            else:
+                error= 'Username or password mismatch'
+                return render_template('login.html', error = error)
+        else :
+            error= 'Username not found'
+            return render_template('login.html', error = error)
+
+    return render_template('login.html')
 
 if __name__ == "__main__":
     app.secret_key = 'secret_key'

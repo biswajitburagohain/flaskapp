@@ -7,7 +7,3 @@ class RegisterForm(Form):
     password = PasswordField('Password ', validators=[validators.DataRequired(), 
                                                   validators.equal_to('confirm', message='Password does not match')])
     confirm= PasswordField('Confirm Password')
-
-class Login(Form):
-    username = StringField('User Name', validators=[validators.input_required()])
-    password = PasswordField('Password', validators=[validators.DataRequired("Password")])
